@@ -6,16 +6,20 @@
 
 A simple way to connect in oracle database and execute querys. This module uses [node-oracledb v3.1.2](https://github.com/oracle/node-oracledb/tree/v3.1.2).
 
+Oracle instant client available [here](https://www.oracle.com/technetwork/topics/winsoft-085727.html).
+
+If you have any question or issue, feel free to ask.
+
 **Table of content**
 
 -   [Installation](#Installation)
     -   [Usage](#Usage)
 -   [Functions](#Functions)
-    -   [config()](#configUserPassConnectionString)
+    -   [config(user, pass, connectionString)](#configUserPassConnectionString)
     -   [testConnection()](#testConnection)
-    -   [loadSQL()](#getDataSqlParamsFile)
-    -   [getData()](#getYearSqlParams)
-    -   [exec()](#execSqlParams)
+    -   [loadSQL(file)](#getDataSqlParamsFile)
+    -   [getData(sql, params)](#getYearSqlParams)
+    -   [exec(sql, params)](#execSqlParams)
 -   [Examples](#Examples)
 -   [Changelog](#Changelog)
 

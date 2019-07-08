@@ -1,0 +1,36 @@
+{
+    "name": "easy-oracledb",
+    "version": "1.0.0",
+    "description": "A simple way and easy to connect in oracle database and execute querys.",
+    "main": "./lib/dbConnection.js",
+    "private": false,
+    "bin": {
+        "my-module": "bin/index.js"
+    },
+    "scripts": {
+        "lint": "./node_modules/.bin/eslint **/*.js",
+        "lint-fix": "./node_modules/.bin/eslint **/*.js --fix"
+    },
+    "author": "Victor Gianvechio <victor.gianvecchio@live.com>",
+    "copyright": "© 2019, Victor Gianvechio",
+    "license": "MIT",
+    "devDependencies": {
+        "babel-eslint": "^10.0.1",
+        "eslint": "^5.16.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/victorgianvechio/easy-oracledb.git"
+    },
+    "keywords": [
+        "oracle",
+        "oracledb",
+        "connection",
+        "utility",
+        "database",
+        "simple"
+    ],
+    "dependencies": {
+        "oracledb": "^3.1.2"
+    }
+}

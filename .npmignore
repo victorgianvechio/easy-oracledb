@@ -1,0 +1,6 @@
+.eslintignore
+.eslintrc
+.gitignore
+.prettierrc
+.prettierignore
+.vscode

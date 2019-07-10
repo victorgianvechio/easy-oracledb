@@ -15,10 +15,10 @@ If you have any question or issue, feel free to ask.
 -   [Installation](#Installation)
     -   [Usage](#Usage)
 -   [Functions](#Functions)
-    -   [config(user, pass, connectionString)](#configUserPassConnectionString)
+    -   [config(dbConfig)](#configDbConfig)
     -   [testConnection()](#testConnection)
-    -   [loadSQL(file)](#getDataSqlParamsFile)
-    -   [getData(sql, params)](#getYearSqlParams)
+    -   [loadSQL(file)](#loadSQLFile)
+    -   [getData(sql, params)](#getDataSqlParams)
     -   [exec(sql, params)](#execSqlParams)
 -   [Examples](#Examples)
 -   [Changelog](#Changelog)
@@ -41,45 +41,55 @@ const db = require('easy-oracledb')
 
 ## Functions
 
-### config(user, pass, connectionString)
+### config(dbConfig)
 
--   {string} **user** - database username
+-   {string} **dbConfig** - an object javascript {user, pass, conn}
 
--   {string} **pass** - database password
+-   {string} **user** - db username
 
--   {string} **connectionString** - a string containing host:port/database
+-   {string} **pass** - db password
+
+-   {string} **conn** - db connection string _hots:port/dbname_
 
 First step configure database connection:
 
 ```javascript
-db.config('master', 'masterkey', '10.254.0.2:1521/dbname')
+db.config({
+    user: 'master', 
+    pass: 'masterkey', 
+    conn: '10.254.0.2:1521/dbname'
+})
 ```
 
 ### testConnection()
 
-Connection can be tested using this function:
+_asynchronous function_
+
+Connection can be tested:
 
 ```javascript
 await db.testConnection()
     .then(result => console.log(result))
-    .ctach(err => console.log(err))
+    .catch(err => console.log(err))
 ```
 
 returns **true** if successfully connected or **error message**.
 
 ### loadSQL(file)
 
-You can load an existing *.sql* file as string
+Load an existing *.sql* file as string
 
 -   {string} **file** - path to file
 
 ```javascript
-let sql = await db.loadSQL('./getCustomers.sql')
+let sql = db.loadSQL('./getCustomers.sql')
 ```
 
 ### getData(sql, params)
 
-Used only for **select** statements
+_asynchronous function_
+
+Used only for **select** statements.
 
 -   {string} **sql** - a sql string
 
@@ -89,25 +99,25 @@ without parameters:
 
 ```javascript
 await db.getData(sql)
-    .then(resul => console.log(result))
+    .then(result => console.log(result))
     .catch(err => console.log(err))
 ```
 with parameters:
 
 ```javascript
 await db.getData(sql, [param1, param2, ...])
-    .then(resul => console.log(result))
+    .then(result => console.log(result))
     .catch(err => console.log(err))
 ```
 
-Returns result set of objects:
+Result:
 
 ```sh
 [ 
     { 
         "COD": "330248",
         "NAME": "Rouchele",
-        "E_MAIL": "Rouchele@domain.com" 
+        "E_MAIL": "rouchele@domain.com" 
     },
     { 
         "COD": "330256",
@@ -119,28 +129,34 @@ Returns result set of objects:
 
 ### exec(sql, params)
 
-Used to **insert**, **update** and **delete** statements
+_asynchronous function_
+
+Used to **insert**, **update** and **delete** statements.
 
 -   {string} **sql** - a sql string
 
--   {array} **params** - an array of parameters
+-   {array} **params** - an array of parameters _(optional)_
+
+without parameters:
+
+```javascript
+await db.exec(sql)
+    .then(result => console.log(result))
+    .catch(err => console.log(err))
+```
+
+with parameters:
 
 ```javascript
 await db.exec(sql, [param1, param2, ...])
-    .then(resul => console.log(result))
+    .then(result => console.log(result))
     .catch(err => console.log(err))
 ```
 
 Returns number of rows affected:
 
 ```sh
-{ rowsAffected: 1 }
-```
-
-You can get only value using:
-
-```javascript
-console.log(result.rowsAffected) // => 1
+1
 ```
 
 ## Examples
@@ -150,78 +166,64 @@ console.log(result.rowsAffected) // => 1
 const db = require('easy-oracledb')
 
 // Configure database access
-db.config('user', 'pass', '10.254.0.2:1521/mydb')
+db.config({
+    user: 'master', 
+    pass: 'masterkey', 
+    conn: '10.254.0.2:1521/dbname'
+})
 
 // Test Connection
 async function testConn() {
-    await db
-        .testConnection()
-        .then(v => {
-            if (v === true) 
-                console.log('Successfully Connected!')
-            else 
-                console.log('err:', v) // Oracle error (invalid username, pass, listener, ...)
-        })
+    await db.testConnection()
+        .then(result => console.log('Successfully Connected!'))
+        .catch(err => console.log(err))
 }
 
 // Get all customers
 async function getCustomers() {
 
-    // let sql = 'SELECT COD, NAME, EMAIL FROM CUSTOMERS'
-    // or load an existing sql file
+    // 'SELECT COD, NAME, EMAIL FROM CUSTOMERS'
     let sql = await db.loadSQL('./getCustomers.sql')
 
-    // let customers = await db.getData(sql)
-    // or
-    let customers = ''
-    let error = ''
     await db.getData(sql)
-        .then(resul => customers = result)
-        .catch(err => error = err)
+        .then(result => console.log(result))
+        .catch(err => console.log(err))
 }
 
 // Get customers by registration date
 async function getCustomersByRegDate() {
 
-    // let sql = 'SELECT COD, NAME, EMAIL FROM CUSTOMERS WHERE REG_DATE BETWEEN :DATE1 AND DATE2'
-    // or load an existing sql file
+    // SELECT COD, NAME, EMAIL FROM CUSTOMERS WHERE REG_DATE BETWEEN :DATE1 AND DATE2'
     let sql = await db.loadSQL('./getCustomersByRegDate.sql')
 
-    // let customers = await db.getData(sql, ['02/08/2019', '06/08/2019'])
-    // or
-    let customers = ''
-    let error = ''
-    await db.getData(sql, ['02/08/2019', '06/08/2019'])
-        .then(resul => customers = result)
-        .catch(err => error = err)
-}
-
-// Insert customer without parameters
-// in this case the SQL contains all values to insert
-async function addNewCustomer() {
-    // let sql = 'INSERT INTO CUSTOMERS(COD, NAME, EMAIL, REG_DATE) VALUES ('1', 'John', 'John@domain.com', '08/07/2019')'
-    // or load an existing sql file
-    let sql = await db.loadSQL('./insertCustomer.sql')
-
-     // let result = await db.exec(sql, ['1', 'John', 'John@domain.com', '08/07/2019'])
-    // or
-    await db.exec(sql)
-        .then(resul => console.log(result.rowsAffected))
+    let param = ['02/08/2019', '06/08/2019']
+    await db.getData(sql, param)
+        .then(result => console.log(result))
         .catch(err => console.log(err))
 }
 
-// Insert customer with parameters
-// here we are passing the parameters to the function exec()
-async function addNewCustomerWithParameter() {
-    // let sql = 'INSERT INTO CUSTOMERS(COD, NAME, EMAIL, REG_DATE) VALUES (:COD, :NAME, :EMAIL, :REG_DATE)'
-    // or load an existing sql file
+// Insert customer without parameters. Note all values ​​are in the SQL string
+async function addNewCustomer() {
+
+    // 'INSERT INTO CUSTOMERS(COD, NAME, EMAIL, REG_DATE) 
+    // VALUES ('1', 'John', 'john@domain.com', '08/07/2019')'
     let sql = await db.loadSQL('./insertCustomer.sql')
 
-     // let result = await db.exec(sql, ['1', 'John', 'John@domain.com', '08/07/2019'])
-    // or
-    let params = ['1', 'John', 'John@domain.com', '08/07/2019']
+    await db.exec(sql)
+        .then(result => console.log(result))
+        .catch(err => console.log(err))
+}
+
+// Insert customer with parameters. Note the values ​​are passed as parameters (:param)
+async function addNewCustomerWithParameter() {
+
+    // 'INSERT INTO CUSTOMERS(COD, NAME, EMAIL, REG_DATE) 
+    // VALUES (:COD, :NAME, :EMAIL, :REG_DATE)'
+    let sql = await db.loadSQL('./insertCustomer.sql')
+     
+    let params = ['1', 'John', 'john@domain.com', '08/07/2019']
     await db.exec(sql, params)
-        .then(resul => console.log(result.rowsAffected))
+        .then(result => console.log(result))
         .catch(err => console.log(err))
 }
 ```

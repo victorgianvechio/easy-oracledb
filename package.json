@@ -16,8 +16,8 @@
     "copyright": "© 2019, Victor Gianvechio",
     "license": "MIT",
     "devDependencies": {
-        "babel-eslint": "^10.0.1",
-        "eslint": "^5.16.0"
+        "babel-eslint": "^10.0.2",
+        "eslint": "^6.0.1"
     },
     "repository": {
         "type": "git",

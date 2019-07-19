@@ -1,9 +1,14 @@
 # Change Log
 
+## easy-oracledb v1.0.2 (19 Jul 2019)
+
+-   Update examples in README;
+-   Alter function name **loadSQL()** to **readSQL()**
+
 ## easy-oracledb v1.0.1 (10 Jul 2019)
 
 -   Updated README;
--   Function config() now receives an object as parameter:
+-   Function **config(object)** now receives an object as parameter:
 
 ```javascript
 db.config({

@@ -12,16 +12,16 @@ If you have any question or issue, feel free to ask.
 
 **Table of content**
 
--   [Installation](#Installation)
-    -   [Usage](#Usage)
--   [Functions](#Functions)
-    -   [config(dbConfig)](#configDbConfig)
-    -   [testConnection()](#testConnection)
-    -   [loadSQL(file)](#loadSQLFile)
-    -   [getData(sql, params)](#getDataSqlParams)
-    -   [exec(sql, params)](#execSqlParams)
--   [Examples](#Examples)
--   [Changelog](#Changelog)
+-   [Installation](#installation)
+    -   [Usage](#usage)
+-   [Functions](#functions)
+    -   [config(dbConfig)](#configdbconfig)
+    -   [testConnection()](#testconnection)
+    -   [readSQL(file)](#readsqlfile)
+    -   [getData(sql, params)](#getdatasqlparams)
+    -   [exec(sql, params)](#execsqlparams)
+-   [Examples](#examples)
+-   [Changelog](changelog)
 
 ---
 
@@ -75,14 +75,14 @@ await db.testConnection()
 
 returns **true** if successfully connected or **error message**.
 
-### loadSQL(file)
+### readSQL(file)
 
-Load an existing *.sql* file as string
+Read an existing **.sql** file as string
 
 -   {string} **file** - path to file
 
 ```javascript
-let sql = db.loadSQL('./getCustomers.sql')
+let sql = db.readSQL('./getCustomers.sql')
 ```
 
 ### getData(sql, params)
@@ -94,15 +94,6 @@ Used only for **select** statements.
 -   {string} **sql** - a sql string
 
 -   {array} **params** - an array of parameters _(optional)_
-
-without parameters:
-
-```javascript
-await db.getData(sql)
-    .then(result => console.log(result))
-    .catch(err => console.log(err))
-```
-with parameters:
 
 ```javascript
 await db.getData(sql, [param1, param2, ...])
@@ -137,16 +128,6 @@ Used to **insert**, **update** and **delete** statements.
 
 -   {array} **params** - an array of parameters _(optional)_
 
-without parameters:
-
-```javascript
-await db.exec(sql)
-    .then(result => console.log(result))
-    .catch(err => console.log(err))
-```
-
-with parameters:
-
 ```javascript
 await db.exec(sql, [param1, param2, ...])
     .then(result => console.log(result))
@@ -161,67 +142,63 @@ Returns number of rows affected:
 
 ## Examples
 
+### Configure and test connection
+
 ```javascript
-// Import easy-oracledb
 const db = require('easy-oracledb')
 
-// Configure database access
 db.config({
     user: 'master', 
     pass: 'masterkey', 
     conn: '10.254.0.2:1521/dbname'
 })
 
-// Test Connection
 async function testConn() {
     await db.testConnection()
         .then(result => console.log('Successfully Connected!'))
         .catch(err => console.log(err))
 }
+```
 
-// Get all customers
-async function getCustomers() {
+### Get customers
 
-    // 'SELECT COD, NAME, EMAIL FROM CUSTOMERS'
-    let sql = await db.loadSQL('./getCustomers.sql')
+```javascript
+async function getCustomers() {    
+    let sql = await db.readSQL('./getCustomers.sql')
 
     await db.getData(sql)
         .then(result => console.log(result))
         .catch(err => console.log(err))
 }
+```
 
-// Get customers by registration date
+### Get customers by registration date
+
+```javascript
 async function getCustomersByRegDate() {
 
     // SELECT COD, NAME, EMAIL FROM CUSTOMERS WHERE REG_DATE BETWEEN :DATE1 AND DATE2'
-    let sql = await db.loadSQL('./getCustomersByRegDate.sql')
+    let sql = await db.readSQL('./getCustomersByRegDate.sql')
 
     let param = ['02/08/2019', '06/08/2019']
+
     await db.getData(sql, param)
         .then(result => console.log(result))
         .catch(err => console.log(err))
 }
+```
 
-// Insert customer without parameters. Note all values ​​are in the SQL string
-async function addNewCustomer() {
+### Insert customers
 
-    // 'INSERT INTO CUSTOMERS(COD, NAME, EMAIL, REG_DATE) 
-    // VALUES ('1', 'John', 'john@domain.com', '08/07/2019')'
-    let sql = await db.loadSQL('./insertCustomer.sql')
-
-    await db.exec(sql)
-        .then(result => console.log(result))
-        .catch(err => console.log(err))
-}
-
-// Insert customer with parameters. Note the values ​​are passed as parameters (:param)
+```javascript
 async function addNewCustomerWithParameter() {
 
     // 'INSERT INTO CUSTOMERS(COD, NAME, EMAIL, REG_DATE) 
     // VALUES (:COD, :NAME, :EMAIL, :REG_DATE)'
-    let sql = await db.loadSQL('./insertCustomer.sql')
+    let sql = await db.readSQL('./insertCustomer.sql')
      
     let params = ['1', 'John', 'john@domain.com', '08/07/2019']
+
     await db.exec(sql, params)
         .then(result => console.log(result))
         .catch(err => console.log(err))

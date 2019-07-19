@@ -23,10 +23,10 @@ If you have any question or issue, feel free to ask.
     -   [getData(sql, params)](#getdatasql-params)
     -   [exec(sql, params)](#execsql-params)
 -   [Examples](#examples)
-    -   [Configure and test connection)](#configure-and-test-connection)
-    -   [Get customers)](#get-customers)
-    -   [Get customers by registration date)](#get-customers-by-registration-date)
-    -   [Insert customer)](#insert-customers)
+    -   [Configure and test connection](#configure-and-test-connection)
+    -   [Get customers](#get-customers)
+    -   [Get customers by registration date](#get-customers-by-registration-date)
+    -   [Insert customer](#insert-customers)
 -   [Changelog](changelog)
 
 ---

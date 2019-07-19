@@ -1,8 +1,10 @@
-# easy-oracledb
+# *easy-oracledb*
 
 [![npm](https://img.shields.io/npm/dt/easy-oracledb.svg)](https://www.npmjs.com/package/easy-oracledb)
 [![license](https://img.shields.io/npm/l/easy-oracledb.svg)](https://github.com/victorgianvechio/easy-oracledb/blob/master/LICENSE)
-[![version](https://img.shields.io/npm/v/easy-oracledb.svg)](https://github.com/victorgianvechio/easy-oracledb/blob/master/CHANGELOG.md)
+[![NPM Version](https://badge.fury.io/js/easy-oracledb.svg?style=flat)](https://npmjs.org/package/easy-oracledb)
+[![Build Status](https://travis-ci.org/victorgianvechio/easy-oracledb.svg?branch=master)](https://travis-ci.org/victorgianvechio/easy-oracledb)
+[![Dependency Status](https://david-dm.org/victorgianvechio/easy-oracledb.svg)](https://david-dm.org/victorgianvechio/easy-oracledb)
 
 A simple way to connect in oracle database and execute querys. This module uses [node-oracledb v3.1.2](https://github.com/oracle/node-oracledb/tree/v3.1.2).
 
@@ -18,9 +20,13 @@ If you have any question or issue, feel free to ask.
     -   [config(dbConfig)](#configdbconfig)
     -   [testConnection()](#testconnection)
     -   [readSQL(file)](#readsqlfile)
-    -   [getData(sql, params)](#getdatasqlparams)
-    -   [exec(sql, params)](#execsqlparams)
+    -   [getData(sql, params)](#getdatasql-params)
+    -   [exec(sql, params)](#execsql-params)
 -   [Examples](#examples)
+    -   [Configure and test connection)](#configure-and-test-connection)
+    -   [Get customers)](#get-customers)
+    -   [Get customers by registration date)](#get-customers-by-registration-date)
+    -   [Insert customer)](#insert-customers)
 -   [Changelog](changelog)
 
 ---
@@ -188,7 +194,7 @@ async function getCustomersByRegDate() {
 }
 ```
 
-### Insert customers
+### Insert customer
 
 ```javascript
 async function addNewCustomerWithParameter() {

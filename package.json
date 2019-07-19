@@ -1,7 +1,7 @@
 {
     "name": "easy-oracledb",
     "version": "1.0.2",
-    "description": "A simple way and easy to connect in oracle database and execute querys.",
+    "description": "A simple way to connect in oracle database and execute querys.",
     "main": "./lib/dbConnection.js",
     "private": false,
     "bin": {
